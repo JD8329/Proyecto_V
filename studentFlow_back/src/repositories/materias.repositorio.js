@@ -185,6 +185,37 @@ export async function deleteMateria(id, userId) {
     return result.affectedRows > 0;
 }
 
+export async function findTareasByMateriaIdAndUserId(materiaId, userId) {
+    const [rows] = await pool.execute(
+        `SELECT
+            t.id_tarea AS id,
+            t.id_materia AS materiaId,
+            t.id_usuario AS usuarioId,
+            t.titulo,
+            t.descripcion,
+            t.completada,
+            t.fecha_vencimiento AS fechaVencimiento,
+            t.created_at AS createdAt,
+            t.updated_at AS updatedAt
+        FROM tarea t
+        WHERE t.id_materia = ? AND t.id_usuario = ?
+        ORDER BY t.created_at DESC`,
+        [materiaId, userId]
+    );
+
+    return rows.map((row) => ({
+        id: row.id,
+        materiaId: row.materiaId,
+        usuarioId: row.usuarioId,
+        titulo: row.titulo,
+        descripcion: row.descripcion,
+        completada: Boolean(row.completada),
+        fechaVencimiento: row.fechaVencimiento,
+        createdAt: row.createdAt,
+        updatedAt: row.updatedAt,
+    }));
+}
+
 export async function existsByCode(userId, codigo, excludeId) {
     const params = [userId, codigo];
     let sql = "SELECT 1 FROM materia WHERE id_usuario = ? AND codigo = ?";

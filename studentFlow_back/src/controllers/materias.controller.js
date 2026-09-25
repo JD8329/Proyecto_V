@@ -8,6 +8,15 @@ import {
   validatePatchMateria
 } from "../validators/materias.validator.js";
 
+/**
+ * Lista todas las materias del usuario autenticado.
+ * @async
+ * @function listMaterias
+ * @param {import('express').Request} request - Request de Express.
+ * @param {import('express').Response} response - Response de Express.
+ * @param {Function} next - Middleware para errores.
+ * @returns {Promise<import('express').Response>} Respuesta con la lista de materias.
+ */
 export async function listMaterias(request, response, next) {
   try {
     const filters = validateMateriaListQuery(request.query);
@@ -18,6 +27,15 @@ export async function listMaterias(request, response, next) {
   }
 }
 
+/**
+ * Obtiene una materia por su id validando que pertenezca al usuario autenticado.
+ * @async
+ * @function getMateria
+ * @param {import('express').Request} request - Request de Express.
+ * @param {import('express').Response} response - Response de Express.
+ * @param {Function} next - Middleware para errores.
+ * @returns {Promise<import('express').Response>} Respuesta con la materia consultada.
+ */
 export async function getMateria(request, response, next) {
   try {
     const id = validateMateriaId(request.params.id);
@@ -28,6 +46,35 @@ export async function getMateria(request, response, next) {
     return next(error);
   }
 }
+
+/**
+ * Devuelve todas las tareas relacionadas con una materia del usuario autenticado.
+ * @async
+ * @function getMateriaTareas
+ * @param {import('express').Request} request - Request de Express.
+ * @param {import('express').Response} response - Response de Express.
+ * @param {Function} next - Middleware para errores.
+ * @returns {Promise<import('express').Response>} Respuesta con las tareas de la materia.
+ */
+export async function getMateriaTareas(request, response, next) {
+  try {
+    const id = validateMateriaId(request.params.id);
+    const tareas = await materiasService.getTareasByMateriaId(id, request.user.id);
+    return sendSuccess(response, tareas);
+  } catch (error) {
+    return next(error);
+  }
+}
+
+/**
+ * Crea una nueva materia para el usuario autenticado.
+ * @async
+ * @function createMateria
+ * @param {import('express').Request} request - Request de Express.
+ * @param {import('express').Response} response - Response de Express.
+ * @param {Function} next - Middleware para errores.
+ * @returns {Promise<import('express').Response>} Respuesta con la materia creada.
+ */
 export async function createMateria(request, response, next) {
   try {
     const payload = validateCreateMateria(request.body);
@@ -38,6 +85,15 @@ export async function createMateria(request, response, next) {
   }
 }
 
+/**
+ * Reemplaza por completo una materia del usuario autenticado.
+ * @async
+ * @function replaceMateria
+ * @param {import('express').Request} request - Request de Express.
+ * @param {import('express').Response} response - Response de Express.
+ * @param {Function} next - Middleware para errores.
+ * @returns {Promise<import('express').Response>} Respuesta con la materia actualizada.
+ */
 export async function replaceMateria(request, response, next) {
   try {
     const id = validateMateriaId(request.params.id);
@@ -49,6 +105,15 @@ export async function replaceMateria(request, response, next) {
   }
 }
 
+/**
+ * Actualiza parcialmente una materia del usuario autenticado.
+ * @async
+ * @function updateMateria
+ * @param {import('express').Request} request - Request de Express.
+ * @param {import('express').Response} response - Response de Express.
+ * @param {Function} next - Middleware para errores.
+ * @returns {Promise<import('express').Response>} Respuesta con la materia actualizada.
+ */
 export async function updateMateria(request, response, next) {
   try {
     const id = validateMateriaId(request.params.id);
@@ -60,6 +125,15 @@ export async function updateMateria(request, response, next) {
   }
 }
 
+/**
+ * Elimina una materia del usuario autenticado.
+ * @async
+ * @function deleteMateria
+ * @param {import('express').Request} request - Request de Express.
+ * @param {import('express').Response} response - Response de Express.
+ * @param {Function} next - Middleware para errores.
+ * @returns {Promise<import('express').Response>} Respuesta vacía con estado 204.
+ */
 export async function deleteMateria(request, response, next) {
   try {
     const id = validateMateriaId(request.params.id);
