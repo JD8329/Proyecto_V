@@ -66,6 +66,16 @@ export async function getMateriaTareas(request, response, next) {
   }
 }
 
+export async function listEventosByMateria(request, response, next) {
+  try {
+    const id = validateMateriaId(request.params.id);
+    const eventos = await materiasService.listEventosByMateria(id, request.user.id);
+    return sendSuccess(response, eventos);
+  } catch (error) {
+    return next(error);
+  }
+}
+
 /**
  * Crea una nueva materia para el usuario autenticado.
  * @async

@@ -216,6 +216,21 @@ export async function findTareasByMateriaIdAndUserId(materiaId, userId) {
     }));
 }
 
+export async function findEventosByMateriaAndUserId(id, userId) {
+    const [rows] = await pool.execute(
+        `SELECT
+            e.id_evento AS id,
+            e.id_materia AS materiaId,
+            e.hora_inicio AS horaInicio
+        FROM evento e
+        INNER JOIN materia m ON m.id_materia = e.id_materia
+        WHERE m.id_materia = ? AND m.id_usuario = ?`,
+        [id, userId]
+    );
+
+    return rows;
+}
+
 export async function existsByCode(userId, codigo, excludeId) {
     const params = [userId, codigo];
     let sql = "SELECT 1 FROM materia WHERE id_usuario = ? AND codigo = ?";

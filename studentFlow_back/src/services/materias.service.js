@@ -61,6 +61,11 @@ export async function getTareasByMateriaId(materiaId, userId) {
     return materiasRepository.findTareasByMateriaIdAndUserId(materiaId, userId);
 }
 
+export async function listEventosByMateria(id, userId) {
+    await getMateriaById(id, userId);
+    return materiasRepository.findEventosByMateriaAndUserId(id, userId);
+}
+
 /**
  * Crea una nueva materia para el usuario autenticado y valida que no haya duplicados.
  * @async
