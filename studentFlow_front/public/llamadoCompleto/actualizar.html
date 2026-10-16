@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudentFlow · Actualizar algunos campos</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/llamados-completos.css">
+  <!-- defer ejecuta el ejemplo cuando los elementos del HTML ya existen. -->
+  <script defer src="../js/llamadosCompletos/actualizarMateria.js"></script>
+</head>
+<body>
+  <main>
+    <header>
+      <p class="eyebrow">StudentFlow / Ejemplo de clase</p>
+      <h1>Actualizar algunos campos</h1>
+      <p>Marca únicamente los campos que deseas modificar. Los demás conservarán sus valores.</p>
+      <p><code>PATCH /api/v1/materias/:id</code></p>
+    </header>
+    <nav class="navegacion" aria-label="Ejemplos de endpoints">
+      <a href="./listar.html">Listar</a>
+      <a href="./obtener.html">Consultar una</a>
+      <a href="./crear.html">Crear</a>
+      <a href="./reemplazar.html">Reemplazar</a>
+      <a href="./actualizar.html">Actualizar campos</a>
+      <a href="./eliminar.html">Eliminar</a>
+      <a href="./estado.html">Estado del servicio</a>
+    </nav>
+    <section class="panel" aria-labelledby="formulario-titulo">
+      <h2 id="formulario-titulo">Datos de la solicitud</h2>
+      <!-- El evento submit llama a la función del ejemplo sin recargar la página. -->
+      <form id="formulario-materia">
+        <label for="materia-id">ID de materia</label>
+        <input id="materia-id" name="id" type="number" min="1" max="9007199254740991" step="1" required placeholder="Usa un ID del listado o de una materia de prueba">
+        <div class="campos">
+          <div class="campo">
+            <label class="seleccion-campo"><input type="checkbox" id="cambiar-nombre"> Modificar nombre</label>
+            <label for="nombre">Nombre</label>
+            <input id="nombre" name="nombre" type="text" value="Programación V - Ejemplo de clase">
+          </div>
+          <div class="campo">
+            <label class="seleccion-campo"><input type="checkbox" id="cambiar-codigo"> Modificar código</label>
+            <label for="codigo">Código</label>
+            <input id="codigo" name="codigo" type="text" value="PROG-V-EJEMPLO">
+          </div>
+          <div class="campo">
+            <label class="seleccion-campo"><input type="checkbox" id="cambiar-color"> Modificar color</label>
+            <label for="color">Color</label>
+            <input id="color" name="color" type="color" value="#2563eb">
+          </div>
+          <div class="campo">
+            <label class="seleccion-campo"><input type="checkbox" id="cambiar-creditos" checked> Modificar créditos</label>
+            <label for="creditos">Créditos</label>
+            <input id="creditos" name="creditos" type="number" min="0" step="1" value="3" placeholder="Vacío: sin asignar">
+          </div>
+          <div class="campo">
+            <label class="seleccion-campo"><input type="checkbox" id="cambiar-activa" checked> Modificar estado</label>
+            <label for="activa">Estado</label>
+            <select id="activa" name="activa"><option value="true">Activa</option><option value="false">Inactiva</option></select>
+          </div>
+        </div>
+        <p class="note">Si marcas créditos y dejas su valor vacío, se enviará null (sin asignar).</p>
+        <div class="actions">
+          <button id="enviar" type="submit">Aplicar cambios</button>
+        </div>
+      </form>
+      <p class="note">La operación se envía al pulsar el botón y afecta a la base de datos real. Usa una materia de prueba.</p>
+    </section>
+    <section class="panel resultado-panel" aria-labelledby="resultado-titulo">
+      <h2 id="resultado-titulo">Resultado</h2>
+      <p id="estado" role="status" aria-live="polite">Completa el formulario para comenzar.</p>
+      <div class="tabla-contenedor" tabindex="0" role="region" aria-label="Materia devuelta por el API">
+        <table>
+          <caption>Materia devuelta por el API</caption>
+          <thead><tr>
+            <th scope="col">ID</th><th scope="col">Nombre</th><th scope="col">Código</th>
+            <th scope="col">Color</th><th scope="col">Créditos</th><th scope="col">Estado</th>
+          </tr></thead>
+          <!-- El JavaScript agrega una fila con los datos recibidos. -->
+          <tbody id="resultado-body"></tbody>
+        </table>
+      </div>
+    </section>
+    <footer>El proceso completo está comentado en <code>js/llamadosCompletos/actualizarMateria.js</code>. También puedes ver el resultado en la consola (F12).</footer>
+  </main>
+</body>
+</html>
+

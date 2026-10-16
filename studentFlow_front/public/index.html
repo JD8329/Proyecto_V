@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudentFlow · Prueba de endpoints</title>
+    <link rel="stylesheet" href="./css/styles.css">
+    <script type="module" src="./js/pages/pruebas.js"></script>
+  </head>
+  <body>
+    <main>
+      <header>
+        <p class="eyebrow">StudentFlow / Desarrollo</p>
+        <h1>API de materias</h1>
+        <p>Prueba cada operación con datos de ejemplo y consulta la respuesta del servidor.</p>
+      </header>
+      <div class="workspace">
+        <section class="panel" aria-labelledby="request-title">
+          <h2 id="request-title">Solicitud</h2>
+          <form id="endpoint-form">
+            <label for="operacion">Operación</label>
+            <select id="operacion" name="operacion"></select>
+            <p><code id="ruta"></code></p>
+            <p id="descripcion" class="muted"></p>
+            <div id="id-group" hidden>
+              <label for="materia-id">ID de materia</label>
+              <input id="materia-id" type="number" min="1" step="1" placeholder="ID obtenido al listar o crear">
+            </div>
+            <div id="body-group" hidden>
+              <label for="datos" id="datos-label">Datos JSON</label>
+              <textarea id="datos" spellcheck="false" rows="11"></textarea>
+            </div>
+            <div class="actions">
+              <button id="ejecutar" type="submit">Ejecutar consulta</button>
+              <button id="restablecer" type="button" class="secondary">Cargar ejemplo</button>
+            </div>
+          </form>
+          <p class="note">Las operaciones usan la base de datos real. Nada se envía automáticamente al abrir esta página.</p>
+        </section>
+        <section class="panel" aria-labelledby="response-title">
+          <h2 id="response-title">Respuesta</h2>
+          <p id="estado" role="status" aria-live="polite">Selecciona una operación para comenzar.</p>
+          <pre id="resultado" tabindex="0">Aquí aparecerá la respuesta JSON.</pre>
+        </section>
+      </div>
+      <footer>Esta página es un ejemplo. Las futuras páginas pueden importar las funciones de <code>js/api/materias.js</code>.</footer>
+    </main>
+  </body>
+</html>

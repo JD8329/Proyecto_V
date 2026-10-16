@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudentFlow · Estado del servicio</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/llamados-completos.css">
+  <!-- defer ejecuta el ejemplo cuando los elementos del HTML ya existen. -->
+  <script defer src="../js/llamadosCompletos/consultarEstado.js"></script>
+</head>
+<body>
+  <main>
+    <header>
+      <p class="eyebrow">StudentFlow / Ejemplo de clase</p>
+      <h1>Estado del servicio</h1>
+      <p>Comprueba que el backend funciona y puede conectarse a MySQL.</p>
+      <p><code>GET /api/v1/health</code></p>
+    </header>
+    <nav class="navegacion" aria-label="Ejemplos de endpoints">
+      <a href="./listar.html">Listar</a>
+      <a href="./obtener.html">Consultar una</a>
+      <a href="./crear.html">Crear</a>
+      <a href="./reemplazar.html">Reemplazar</a>
+      <a href="./actualizar.html">Actualizar campos</a>
+      <a href="./eliminar.html">Eliminar</a>
+      <a href="./estado.html">Estado del servicio</a>
+    </nav>
+    <section class="panel" aria-labelledby="formulario-titulo">
+      <h2 id="formulario-titulo">Comprobar conexión</h2>
+      <button id="enviar" type="button">Consultar estado</button>
+    </section>
+    <section class="panel resultado-panel" aria-labelledby="resultado-titulo">
+      <h2 id="resultado-titulo">Resultado</h2>
+      <p id="estado" role="status" aria-live="polite">Preparando la consulta…</p>
+      <dl class="detalle-estado">
+        <dt>Servicio</dt><dd id="servicio">Pendiente</dd>
+        <dt>Base de datos</dt><dd id="base-datos">Pendiente</dd>
+      </dl>
+    </section>
+    <footer>El proceso completo está comentado en <code>js/llamadosCompletos/consultarEstado.js</code>. También puedes ver el resultado en la consola (F12).</footer>
+  </main>
+</body>
+</html>
+

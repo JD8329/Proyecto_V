@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudentFlow · Consultar una materia</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/llamados-completos.css">
+  <!-- defer ejecuta el ejemplo cuando los elementos del HTML ya existen. -->
+  <script defer src="../js/llamadosCompletos/obtenerMateria.js"></script>
+</head>
+<body>
+  <main>
+    <header>
+      <p class="eyebrow">StudentFlow / Ejemplo de clase</p>
+      <h1>Consultar una materia</h1>
+      <p>Consulta una materia por su identificador.</p>
+      <p><code>GET /api/v1/materias/:id</code></p>
+    </header>
+    <nav class="navegacion" aria-label="Ejemplos de endpoints">
+      <a href="./listar.html">Listar</a>
+      <a href="./obtener.html">Consultar una</a>
+      <a href="./crear.html">Crear</a>
+      <a href="./reemplazar.html">Reemplazar</a>
+      <a href="./actualizar.html">Actualizar campos</a>
+      <a href="./eliminar.html">Eliminar</a>
+      <a href="./estado.html">Estado del servicio</a>
+    </nav>
+    <section class="panel" aria-labelledby="formulario-titulo">
+      <h2 id="formulario-titulo">Datos de la solicitud</h2>
+      <!-- El evento submit llama a la función del ejemplo sin recargar la página. -->
+      <form id="formulario-materia">
+        <label for="materia-id">ID de materia</label>
+        <input id="materia-id" name="id" type="number" min="1" max="9007199254740991" step="1" required placeholder="Usa un ID del listado o de una materia de prueba">
+        <div class="actions">
+          <button id="enviar" type="submit">Consultar materia</button>
+        </div>
+      </form>
+
+    </section>
+    <section class="panel resultado-panel" aria-labelledby="resultado-titulo">
+      <h2 id="resultado-titulo">Resultado</h2>
+      <p id="estado" role="status" aria-live="polite">Completa el formulario para comenzar.</p>
+      <div class="tabla-contenedor" tabindex="0" role="region" aria-label="Materia devuelta por el API">
+        <table>
+          <caption>Materia devuelta por el API</caption>
+          <thead><tr>
+            <th scope="col">ID</th><th scope="col">Nombre</th><th scope="col">Código</th>
+            <th scope="col">Color</th><th scope="col">Créditos</th><th scope="col">Estado</th>
+          </tr></thead>
+          <!-- El JavaScript agrega una fila con los datos recibidos. -->
+          <tbody id="resultado-body"></tbody>
+        </table>
+      </div>
+    </section>
+    <footer>El proceso completo está comentado en <code>js/llamadosCompletos/obtenerMateria.js</code>. También puedes ver el resultado en la consola (F12).</footer>
+  </main>
+</body>
+</html>
+

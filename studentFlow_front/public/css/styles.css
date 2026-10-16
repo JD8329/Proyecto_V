@@ -1,0 +1,30 @@
+:root { color-scheme: light; font-family: system-ui, sans-serif; color: #172b42; background: #f2f5fa; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+main { max-width: 1160px; margin: auto; padding: 44px 24px; }
+header { margin-bottom: 28px; }
+h1 { font-size: clamp(2rem, 5vw, 3rem); letter-spacing: -.04em; margin: 8px 0; }
+h2 { margin-top: 0; font-size: 1.2rem; }
+p { line-height: 1.6; }
+.eyebrow { color: #2456a6; font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; }
+.workspace { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+.panel { min-width: 0; background: white; border: 1px solid #dce3ee; border-radius: 16px; padding: 24px; }
+label { display: block; margin: 18px 0 8px; font-weight: 600; font-size: .9rem; }
+select, input, textarea, button { font: inherit; }
+select, input, textarea { width: 100%; border: 1px solid #a8b6c9; border-radius: 8px; padding: 12px; color: inherit; background: white; }
+textarea { font-family: ui-monospace, Consolas, monospace; font-size: .9rem; resize: vertical; }
+button { border: 0; border-radius: 8px; background: #2456a6; color: white; padding: 12px 16px; cursor: pointer; font-weight: 600; }
+button.secondary { background: #eaf0f8; color: #24466d; }
+button.danger { background: #b32632; }
+button:disabled { opacity: .6; cursor: wait; }
+:focus-visible { outline: 3px solid #7c3aed; outline-offset: 3px; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+.muted, footer, .note { color: #53657d; }
+.note, footer { font-size: .85rem; }
+#ruta { background: #eaf0f8; border-radius: 5px; padding: 5px 8px; }
+#estado[data-type="error"] { color: #b32632; }
+#estado[data-type="success"] { color: #156547; }
+pre { margin: 16px 0 0; min-height: 280px; max-height: 650px; overflow: auto; padding: 18px; border-radius: 10px; color: #e1ebfb; background: #152438; font-size: .85rem; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+footer { margin-top: 24px; line-height: 1.6; }
+[hidden] { display: none !important; }
+@media (max-width: 760px) { .workspace { grid-template-columns: 1fr; } main { padding: 28px 16px; } .panel { padding: 20px; } }

@@ -1,0 +1,13 @@
+{
+  "name": "studentflow-front",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Base HTML, CSS y JavaScript para consumir el API de StudentFlow",
+  "scripts": {
+    "dev": "node --watch server.js",
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "engines": { "node": ">=22" }
+}

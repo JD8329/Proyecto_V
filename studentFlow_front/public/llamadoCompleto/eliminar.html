@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudentFlow · Eliminar materia</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/llamados-completos.css">
+  <!-- defer ejecuta el ejemplo cuando los elementos del HTML ya existen. -->
+  <script defer src="../js/llamadosCompletos/eliminarMateria.js"></script>
+</head>
+<body>
+  <main>
+    <header>
+      <p class="eyebrow">StudentFlow / Ejemplo de clase</p>
+      <h1>Eliminar materia</h1>
+      <p>Indica el ID de la materia que quieres eliminar de la base de datos.</p>
+      <p><code>DELETE /api/v1/materias/:id</code></p>
+    </header>
+    <nav class="navegacion" aria-label="Ejemplos de endpoints">
+      <a href="./listar.html">Listar</a>
+      <a href="./obtener.html">Consultar una</a>
+      <a href="./crear.html">Crear</a>
+      <a href="./reemplazar.html">Reemplazar</a>
+      <a href="./actualizar.html">Actualizar campos</a>
+      <a href="./eliminar.html">Eliminar</a>
+      <a href="./estado.html">Estado del servicio</a>
+    </nav>
+    <section class="panel" aria-labelledby="formulario-titulo">
+      <h2 id="formulario-titulo">Datos de la solicitud</h2>
+      <!-- El evento submit llama a la función del ejemplo sin recargar la página. -->
+      <form id="formulario-materia">
+        <label for="materia-id">ID de materia</label>
+        <input id="materia-id" name="id" type="number" min="1" max="9007199254740991" step="1" required placeholder="Usa un ID del listado o de una materia de prueba">
+        <div class="actions">
+          <button id="enviar" type="submit" class="danger">Eliminar materia</button>
+        </div>
+      </form>
+      <p class="note">La operación se envía al pulsar el botón y afecta a la base de datos real. Usa una materia de prueba.</p>
+    </section>
+    <section class="panel resultado-panel" aria-labelledby="resultado-titulo">
+      <h2 id="resultado-titulo">Resultado</h2>
+      <p id="estado" role="status" aria-live="polite">Completa el formulario para comenzar.</p>
+      <p id="resultado">Una eliminación correcta devuelve HTTP 204, sin cuerpo JSON.</p>
+    </section>
+    <footer>El proceso completo está comentado en <code>js/llamadosCompletos/eliminarMateria.js</code>. También puedes ver el resultado en la consola (F12).</footer>
+  </main>
+</body>
+</html>
+

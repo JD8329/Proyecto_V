@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudentFlow · Listado de materias</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/llamados-completos.css">
+  <style>
+    .tabla-contenedor { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    caption { text-align: left; padding: 16px 0; color: #53657d; }
+    th, td { padding: 14px 12px; border-bottom: 1px solid #dce3ee; }
+    th { background: #eaf0f8; font-size: .9rem; }
+    td { overflow-wrap: anywhere; }
+    tbody tr:hover { background: #f2f5fa; }
+  </style>
+  <!-- defer espera a que el HTML esté listo antes de ejecutar el ejemplo. -->
+  <script defer src="../js/llamadosCompletos/listarMaterias.js"></script>
+</head>
+<body>
+  <main>
+    <header>
+      <p class="eyebrow">StudentFlow / Ejemplo de clase</p>
+      <h1>Listado de materias</h1>
+      <p>Materias activas ordenadas por nombre. Se consultan hasta 20 registros de la primera página.</p>
+    </header>
+
+    <nav class="navegacion" aria-label="Ejemplos de endpoints">
+      <a href="./listar.html">Listar</a>
+      <a href="./obtener.html">Consultar una</a>
+      <a href="./crear.html">Crear</a>
+      <a href="./reemplazar.html">Reemplazar</a>
+      <a href="./actualizar.html">Actualizar campos</a>
+      <a href="./eliminar.html">Eliminar</a>
+      <a href="./estado.html">Estado del servicio</a>
+    </nav>
+
+    <section class="panel" aria-labelledby="listado-titulo">
+      <h2 id="listado-titulo">Mis materias</h2>
+      <button id="recargar-materias" type="button" onclick="listarMaterias()">Actualizar listado</button>
+      <p id="estado" role="status" aria-live="polite">Preparando la consulta…</p>
+      <p id="paginacion" class="muted"></p>
+
+      <div class="tabla-contenedor" tabindex="0" role="region" aria-label="Tabla de materias">
+        <table>
+          <caption>Resultados de la consulta al API</caption>
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Código</th>
+              <th scope="col">Color</th>
+              <th scope="col">Créditos</th>
+              <th scope="col">Estado</th>
+            </tr>
+          </thead>
+          <!-- JavaScript agrega una fila por cada materia recibida. -->
+          <tbody id="materias-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer>
+      El ejemplo completo está en <code>js/llamadosCompletos/listarMaterias.js</code>.
+      También puedes ver los resultados en la consola del navegador (F12).
+    </footer>
+  </main>
+</body>
+</html>

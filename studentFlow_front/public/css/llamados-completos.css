@@ -1,0 +1,21 @@
+/* Presentación compartida; cada endpoint mantiene su JavaScript independiente. */
+.navegacion { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 24px; }
+.navegacion a { color: #24466d; background: #e2eaf5; padding: 10px 14px; border-radius: 8px; text-decoration: none; }
+.navegacion a:hover { text-decoration: underline; }
+.campos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 20px; }
+.campo { min-width: 0; }
+.seleccion-campo { display: flex; gap: 8px; align-items: center; color: #2456a6; }
+.seleccion-campo input { width: auto; }
+input[type="color"] { height: 48px; padding: 4px; }
+.resultado-panel { margin-top: 24px; }
+.tabla-contenedor { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; text-align: left; }
+caption { text-align: left; padding: 16px 0; color: #53657d; }
+th, td { padding: 14px 12px; border-bottom: 1px solid #dce3ee; }
+th { background: #eaf0f8; font-size: .9rem; }
+td { overflow-wrap: anywhere; }
+tbody tr:hover { background: #f2f5fa; }
+.detalle-estado dt { font-weight: 600; margin-top: 16px; }
+.detalle-estado dd { margin: 4px 0 0; }
+@media (max-width: 600px) { .campos { grid-template-columns: 1fr; } }
+
