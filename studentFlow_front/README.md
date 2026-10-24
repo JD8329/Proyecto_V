@@ -20,7 +20,7 @@ cd D:\Downloads\camacho\2026B\programacionV\studentFlow_front
 npm start
 ```
 
-Abre **http://127.0.0.1:5500**. También puedes usar `npm run dev` para reiniciar el servidor local al editar archivos. Refresca el navegador para ver cambios en las páginas.
+Abre **http://127.0.0.1:5501**. También puedes usar `npm run dev` para reiniciar el servidor local al editar archivos. Refresca el navegador para ver cambios en las páginas.
 
 El servidor sirve únicamente `public/` y reenvía las solicitudes `/api/` al backend en `http://127.0.0.1:3000`. Así las páginas y el API comparten origen sin modificar el backend ni necesitar CORS durante el desarrollo. No abras el HTML con doble clic ni con Live Server: esos métodos no incluyen el proxy.
 
@@ -60,6 +60,8 @@ studentFlow_front/
 ## Endpoints disponibles
 
 Todas las rutas parten de `/api/v1`.
+
+El aplicativo de recordatorios se abre en **http://127.0.0.1:5500/recordatorios.html** después de iniciar el servidor frontend. Su API, operaciones y payloads están documentados en [recordatorio.md](../recordatorio.md).
 
 | Función | Método | Ruta | Resultado |
 | --- | --- | --- | --- |

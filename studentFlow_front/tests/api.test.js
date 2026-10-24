@@ -6,9 +6,13 @@ import {
   listarMaterias, obtenerMateria, crearMateria,
   reemplazarMateria, actualizarMateria, eliminarMateria
 } from "../public/js/api/materias.js";
+import {
+  listarRecordatorios, listarTareasRecordatorio, obtenerRecordatorio,
+  crearRecordatorio, reemplazarRecordatorio, actualizarRecordatorio, eliminarRecordatorio
+} from "../public/js/api/recordatorios.js";
 import { materiaEjemplo, reemplazoEjemplo, cambiosEjemplo } from "../public/js/examples/datos.js";
 
-test("los siete endpoints envían método, ruta y cuerpo correctos", async t => {
+test("las siete rutas envían el método, la ruta y el cuerpo correctos", async t => {
   const calls = [];
   t.mock.method(globalThis, "fetch", async (url, options) => {
     calls.push({ url, ...options });
@@ -79,10 +83,49 @@ test("una respuesta HTML inesperada no se trata como JSON válido", async t => {
   await assert.rejects(consultarEstado(), { code: "INVALID_RESPONSE", status: 502 });
 });
 
-test("IDs inválidos no envían solicitudes", t => {
+test("los identificadores inválidos no envían solicitudes", t => {
   const fetchMock = t.mock.method(globalThis, "fetch", () => { throw new Error("No debería llamarse"); });
   for (const id of [0, -1, "abc", "", "1/2", 1.5, Number.MAX_SAFE_INTEGER + 1]) {
     assert.throws(() => obtenerMateria(id), TypeError);
+  }
+  assert.equal(fetchMock.mock.callCount(), 0);
+});
+
+test("el cliente de recordatorios utiliza sus rutas y operaciones HTTP", async t => {
+  const calls = [];
+  t.mock.method(globalThis, "fetch", async (url, options) => {
+    calls.push({ url, ...options });
+    return options.method === "DELETE"
+      ? new Response(null, { status: 204 })
+      : Response.json({ success: true, data: [] });
+  });
+
+  await listarRecordatorios({ leido: false, search: "parcial", page: 2 });
+  await listarTareasRecordatorio();
+  await obtenerRecordatorio(9);
+  await crearRecordatorio({ mensaje: "Aviso" });
+  await reemplazarRecordatorio(9, { mensaje: "Completo" });
+  await actualizarRecordatorio(9, { leido: true });
+  assert.equal(await eliminarRecordatorio(9), null);
+
+  assert.deepEqual(calls.map(({ url, method }) => [method, url]), [
+    ["GET", "/api/v1/recordatorios?leido=false&search=parcial&page=2"],
+    ["GET", "/api/v1/recordatorios/tareas"],
+    ["GET", "/api/v1/recordatorios/9"],
+    ["POST", "/api/v1/recordatorios"],
+    ["PUT", "/api/v1/recordatorios/9"],
+    ["PATCH", "/api/v1/recordatorios/9"],
+    ["DELETE", "/api/v1/recordatorios/9"]
+  ]);
+  assert.deepEqual(JSON.parse(calls[3].body), { mensaje: "Aviso" });
+  assert.deepEqual(JSON.parse(calls[4].body), { mensaje: "Completo" });
+  assert.deepEqual(JSON.parse(calls[5].body), { leido: true });
+});
+
+test("los identificadores inválidos de recordatorio no envían solicitudes", t => {
+  const fetchMock = t.mock.method(globalThis, "fetch", () => { throw new Error("No debería llamarse"); });
+  for (const id of [0, -1, "abc", "", 1.5, Number.MAX_SAFE_INTEGER + 1]) {
+    assert.throws(() => obtenerRecordatorio(id), TypeError);
   }
   assert.equal(fetchMock.mock.callCount(), 0);
 });
