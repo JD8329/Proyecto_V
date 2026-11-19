@@ -1,0 +1,22 @@
+{
+  "name": "laboratorio-ventas-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "API REST para registrar ventas y consultar su resumen diario",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js",
+    "check": "node --check src/server.js && node --check src/app.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.0",
+    "express": "^5.1.0",
+    "mysql2": "^3.15.0"
+  }
+}

@@ -1,0 +1,246 @@
+<!doctype html>
+<html class="no-js" lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Ventas Admin | Laboratorio de ventas</title>
+  <meta name="description" content="Administración y seguimiento de ventas">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="assets/css/cs-skin-elastic.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/ventas.css">
+</head>
+<body>
+  <aside id="left-panel" class="left-panel">
+    <nav class="navbar navbar-expand-sm navbar-default">
+      <div id="main-menu" class="main-menu collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li class="active" data-section-link="dashboard">
+            <a href="#dashboard"><i class="menu-icon fa fa-dashboard"></i>Resumen</a>
+          </li>
+          <li data-section-link="ventas">
+            <a href="#ventas"><i class="menu-icon fa fa-shopping-cart"></i>Ventas</a>
+          </li>
+          <li data-section-link="nueva">
+            <a href="#nueva"><i class="menu-icon fa fa-plus-circle"></i>Nueva venta</a>
+          </li>
+          <li class="menu-title">Consulta</li>
+          <li>
+            <a href="#ventas" id="menu-confirmadas"><i class="menu-icon fa fa-check-circle"></i>Confirmadas</a>
+          </li>
+          <li>
+            <a href="#ventas" id="menu-anuladas"><i class="menu-icon fa fa-ban"></i>Anuladas</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </aside>
+
+  <div id="right-panel" class="right-panel">
+    <header id="header" class="header">
+      <div class="top-left">
+        <div class="navbar-header">
+          <a class="navbar-brand brand-text" href="#dashboard"><span>V</span>entasAdmin</a>
+          <a class="navbar-brand hidden brand-text" href="#dashboard"><span>V</span>A</a>
+          <button id="menuToggle" class="menutoggle" type="button" aria-label="Abrir o cerrar menú">
+            <i class="fa fa-bars"></i>
+          </button>
+        </div>
+      </div>
+      <div class="top-right">
+        <div class="header-menu">
+          <div class="header-left status-wrap">
+            <span id="api-status" class="api-status pending"><i class="fa fa-circle"></i> Comprobando API</span>
+          </div>
+          <div class="user-area">
+            <span class="user-avatar"><i class="fa fa-line-chart"></i></span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="breadcrumbs">
+      <div class="breadcrumbs-inner">
+        <div class="row m-0">
+          <div class="col-sm-6">
+            <div class="page-header float-left">
+              <div class="page-title"><h1 id="page-title">Resumen de ventas</h1></div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="page-header float-right">
+              <div class="page-title">
+                <ol class="breadcrumb text-right">
+                  <li><a href="#dashboard">Laboratorio</a></li>
+                  <li id="breadcrumb-current" class="active">Resumen</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <main class="content">
+      <div id="global-alert" class="alert d-none" role="alert"></div>
+
+      <section id="section-dashboard" class="app-section animated fadeIn">
+        <div class="row align-items-end mb-3">
+          <div class="col-lg-4">
+            <h2 class="section-heading">Indicadores del período</h2>
+            <p class="section-copy">Información consolidada para seguimiento administrativo.</p>
+          </div>
+          <div class="col-lg-8">
+            <form id="summary-filter" class="period-filter">
+              <label>Desde<input id="summary-from" type="date" class="form-control" required></label>
+              <label>Hasta<input id="summary-to" type="date" class="form-control" required></label>
+              <button type="submit" class="btn btn-brand" aria-label="Actualizar indicadores"><i class="fa fa-refresh"></i></button>
+              <button id="consolidate-summary" type="button" class="btn btn-consolidate" disabled><i class="fa fa-spinner fa-spin"></i> Comprobando</button>
+            </form>
+          </div>
+        </div>
+
+        <div class="row kpi-grid">
+          <div class="col-sm-6 col-xl-3">
+            <article class="kpi-card kpi-teal">
+              <div><span>Ventas</span><strong id="kpi-sales">0</strong></div><i class="fa fa-shopping-bag"></i>
+            </article>
+          </div>
+          <div class="col-sm-6 col-xl-3">
+            <article class="kpi-card kpi-blue">
+              <div><span>Unidades</span><strong id="kpi-units">0</strong></div><i class="fa fa-cubes"></i>
+            </article>
+          </div>
+          <div class="col-sm-6 col-xl-3">
+            <article class="kpi-card kpi-gold">
+              <div><span>Ingresos</span><strong id="kpi-income">$ 0</strong></div><i class="fa fa-money"></i>
+            </article>
+          </div>
+          <div class="col-sm-6 col-xl-3">
+            <article class="kpi-card kpi-purple">
+              <div><span>Ticket promedio</span><strong id="kpi-ticket">$ 0</strong></div><i class="fa fa-calculator"></i>
+            </article>
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-lg-8">
+            <div class="card chart-card">
+              <div class="card-header"><strong>Ingresos por día</strong></div>
+              <div class="card-body">
+                <div id="daily-chart" class="daily-chart" aria-label="Gráfico de ingresos diarios"></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="card update-card">
+              <div class="card-header"><strong>Estado de consolidación</strong></div>
+              <div class="card-body">
+                <div class="update-icon"><i class="fa fa-clock-o"></i></div>
+                <p id="last-update" class="last-update">Sin datos consolidados en el período.</p>
+                <p class="text-muted mb-0">Las operaciones aparecerán aquí después de ejecutar el procedimiento o el evento programado.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="section-ventas" class="app-section animated fadeIn d-none">
+        <div class="card">
+          <div class="card-header sales-card-header">
+            <div><strong>Ventas registradas</strong><small>Consulta, edita y anula operaciones.</small></div>
+            <button id="new-sale-button" class="btn btn-brand" type="button"><i class="fa fa-plus"></i> Nueva venta</button>
+          </div>
+          <div class="card-body">
+            <form id="sales-filter" class="sales-filter">
+              <label>Cliente<select id="filter-client" class="form-control"><option value="">Todos</option></select></label>
+              <label>Estado<select id="filter-status" class="form-control"><option value="">Todos</option><option>CONFIRMADA</option><option>ANULADA</option></select></label>
+              <label>Desde<input id="filter-from" type="date" class="form-control"></label>
+              <label>Hasta<input id="filter-to" type="date" class="form-control"></label>
+              <label>Registros<select id="filter-limit" class="form-control"><option>5</option><option selected>10</option><option>20</option><option>50</option></select></label>
+              <div class="filter-actions">
+                <button class="btn btn-brand" type="submit"><i class="fa fa-search"></i> Consultar</button>
+                <button id="clear-filters" class="btn btn-outline-secondary" type="button">Limpiar</button>
+              </div>
+            </form>
+
+            <div class="table-responsive">
+              <table class="table table-striped table-bordered sales-table">
+                <thead><tr><th>ID</th><th>Fecha</th><th>Cliente</th><th>Estado</th><th class="text-right">Total</th><th class="text-center">Acciones</th></tr></thead>
+                <tbody id="sales-body"></tbody>
+              </table>
+            </div>
+            <div class="table-footer">
+              <span id="sales-count">Sin registros</span>
+              <nav aria-label="Paginación de ventas"><ul id="sales-pagination" class="pagination pagination-sm mb-0"></ul></nav>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner bg-white"><div class="row"><div class="col-sm-6">Laboratorio de ventas</div><div class="col-sm-6 text-right">Node.js · Express · MariaDB</div></div></div>
+    </footer>
+  </div>
+
+  <div class="modal fade" id="sale-modal" tabindex="-1" role="dialog" aria-labelledby="sale-modal-title" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <form id="sale-form">
+          <div class="modal-header">
+            <div><h5 id="sale-modal-title" class="modal-title">Registrar venta</h5><small id="sale-modal-subtitle">Complete la cabecera y agregue productos.</small></div>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+          </div>
+          <div class="modal-body">
+            <input id="sale-id" type="hidden">
+            <div class="form-row">
+              <div class="form-group col-md-5"><label for="sale-client">Cliente</label><select id="sale-client" class="form-control" required></select></div>
+              <div class="form-group col-md-4"><label for="sale-date">Fecha y hora</label><input id="sale-date" type="datetime-local" step="1" class="form-control" required></div>
+              <div class="form-group col-md-3"><label for="sale-status">Estado</label><select id="sale-status" class="form-control" required><option>CONFIRMADA</option><option>ANULADA</option></select></div>
+            </div>
+
+            <div class="details-heading">
+              <div><h6>Detalle de la venta</h6><small>El precio puede ajustarse para conservar el valor histórico negociado.</small></div>
+              <button id="add-detail" class="btn btn-outline-brand btn-sm" type="button"><i class="fa fa-plus"></i> Agregar producto</button>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-bordered detail-table">
+                <thead><tr><th>Producto</th><th width="120">Cantidad</th><th width="160">Precio unitario</th><th width="150" class="text-right">Subtotal</th><th width="60"></th></tr></thead>
+                <tbody id="details-body"></tbody>
+                <tfoot><tr><th colspan="3" class="text-right">Total</th><th id="sale-total" class="text-right">$ 0</th><th></th></tr></tfoot>
+              </table>
+            </div>
+            <div id="form-error" class="alert alert-danger d-none" role="alert"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-dismiss="modal">Cancelar</button>
+            <button id="save-sale" type="submit" class="btn btn-brand"><i class="fa fa-save"></i> Guardar venta</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="detail-modal" tabindex="-1" role="dialog" aria-labelledby="detail-title" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document"><div class="modal-content">
+      <div class="modal-header"><h5 id="detail-title" class="modal-title">Detalle de venta</h5><button type="button" class="close" data-dismiss="modal"><span>&times;</span></button></div>
+      <div id="detail-content" class="modal-body"></div>
+      <div class="modal-footer"><button type="button" class="btn btn-light" data-dismiss="modal">Cerrar</button></div>
+    </div></div>
+  </div>
+
+  <div id="toast" class="app-toast" role="status" aria-live="polite"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery-match-height@0.7.2/dist/jquery.matchHeight-min.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script type="module" src="assets/js/ventas.js"></script>
+</body>
+</html>
