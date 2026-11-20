@@ -1,275 +1,144 @@
--- phpMyAdmin SQL Dump
--- version 5.2.0
--- https://www.phpmyadmin.net/
---
--- Servidor: 127.0.0.1
--- Tiempo de generación: 06-11-2026 a las 13:09:31
--- Versión del servidor: 10.4.27-MariaDB
--- Versión de PHP: 7.4.33
+-- Volcado funcional de laboratorio_ventas
+-- Compatible con MariaDB 10.4/MySQL 8.x
+-- Contiene el esquema, las 30 ventas de prueba y el procedimiento de consolidacion.
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
+CREATE DATABASE IF NOT EXISTS laboratorio_ventas
+  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE laboratorio_ventas;
 
+SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS detalle_venta;
+DROP TABLE IF EXISTS resumen_ventas_diarias;
+DROP TABLE IF EXISTS ventas;
+DROP TABLE IF EXISTS productos;
+DROP TABLE IF EXISTS clientes;
+DROP EVENT IF EXISTS ev_actualizar_resumen_ventas;
+DROP PROCEDURE IF EXISTS sp_actualizar_resumen_ventas;
+SET FOREIGN_KEY_CHECKS = 1;
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+CREATE TABLE clientes (
+  id_cliente INT NOT NULL AUTO_INCREMENT,
+  nombre VARCHAR(100) NOT NULL,
+  PRIMARY KEY (id_cliente)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Base de datos: `laboratorio_ventas`
---
+CREATE TABLE productos (
+  id_producto INT NOT NULL AUTO_INCREMENT,
+  nombre VARCHAR(100) NOT NULL,
+  precio_catalogo DECIMAL(12,2) NOT NULL,
+  PRIMARY KEY (id_producto),
+  CONSTRAINT ck_precio_catalogo CHECK (precio_catalogo >= 0)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE ventas (
+  id_venta INT NOT NULL AUTO_INCREMENT,
+  id_cliente INT NOT NULL,
+  fecha_venta DATETIME NOT NULL,
+  estado ENUM('CONFIRMADA','ANULADA') NOT NULL DEFAULT 'CONFIRMADA',
+  fecha_modificacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id_venta),
+  KEY idx_ventas_estado_fecha (estado, fecha_venta),
+  CONSTRAINT fk_venta_cliente FOREIGN KEY (id_cliente) REFERENCES clientes (id_cliente)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE detalle_venta (
+  id_detalle INT NOT NULL AUTO_INCREMENT,
+  id_venta INT NOT NULL,
+  id_producto INT NOT NULL,
+  cantidad INT NOT NULL,
+  precio_unitario DECIMAL(12,2) NOT NULL,
+  PRIMARY KEY (id_detalle),
+  KEY idx_detalle_venta (id_venta),
+  KEY fk_detalle_producto (id_producto),
+  CONSTRAINT ck_cantidad CHECK (cantidad > 0),
+  CONSTRAINT ck_precio_venta CHECK (precio_unitario >= 0),
+  CONSTRAINT fk_detalle_venta FOREIGN KEY (id_venta) REFERENCES ventas (id_venta) ON DELETE CASCADE,
+  CONSTRAINT fk_detalle_producto FOREIGN KEY (id_producto) REFERENCES productos (id_producto)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE resumen_ventas_diarias (
+  fecha DATE NOT NULL,
+  cantidad_ventas INT NOT NULL,
+  unidades_vendidas INT NOT NULL,
+  ingresos DECIMAL(14,2) NOT NULL,
+  ticket_promedio DECIMAL(14,2) NOT NULL,
+  ultima_actualizacion DATETIME NOT NULL,
+  PRIMARY KEY (fecha)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO clientes (id_cliente, nombre) VALUES
+(1,'Ana'), (2,'Luis'), (3,'Maria'), (4,'Carlos'), (5,'Laura');
+
+INSERT INTO productos (id_producto, nombre, precio_catalogo) VALUES
+(1,'Teclado',100.00), (2,'Mouse',50.00), (3,'Monitor',600.00),
+(4,'Audifonos',200.00), (5,'Webcam',180.00);
+
+INSERT INTO ventas (id_venta, id_cliente, fecha_venta, estado) VALUES
+(1,1,'2026-10-28 09:10:00','CONFIRMADA'), (2,2,'2026-10-28 10:20:00','CONFIRMADA'),
+(3,3,'2026-10-28 15:40:00','ANULADA'), (4,4,'2026-10-29 08:30:00','CONFIRMADA'),
+(5,5,'2026-10-29 11:15:00','CONFIRMADA'), (6,1,'2026-10-29 18:05:00','ANULADA'),
+(7,2,'2026-10-30 09:00:00','CONFIRMADA'), (8,3,'2026-10-30 12:30:00','CONFIRMADA'),
+(9,4,'2026-10-30 16:45:00','CONFIRMADA'), (10,5,'2026-10-31 08:20:00','ANULADA'),
+(11,1,'2026-10-31 10:10:00','CONFIRMADA'), (12,2,'2026-10-31 14:35:00','CONFIRMADA'),
+(13,3,'2026-11-01 09:25:00','CONFIRMADA'), (14,4,'2026-11-01 13:00:00','ANULADA'),
+(15,5,'2026-11-01 17:20:00','CONFIRMADA'), (16,1,'2026-11-02 08:05:00','CONFIRMADA'),
+(17,2,'2026-11-02 09:15:00','CONFIRMADA'), (18,3,'2026-11-02 10:40:00','CONFIRMADA'),
+(19,4,'2026-11-02 12:25:00','ANULADA'), (20,5,'2026-11-02 15:10:00','CONFIRMADA'),
+(21,1,'2026-11-03 08:45:00','CONFIRMADA'), (22,2,'2026-11-03 10:50:00','CONFIRMADA'),
+(23,3,'2026-11-03 13:35:00','CONFIRMADA'), (24,4,'2026-11-03 16:10:00','ANULADA'),
+(25,5,'2026-11-04 09:05:00','CONFIRMADA'), (26,1,'2026-11-04 11:30:00','CONFIRMADA'),
+(27,2,'2026-11-04 14:15:00','CONFIRMADA'), (28,3,'2026-11-04 16:50:00','ANULADA'),
+(29,4,'2026-11-05 09:40:00','CONFIRMADA'), (30,5,'2026-11-05 12:20:00','CONFIRMADA');
+
+INSERT INTO detalle_venta (id_venta, id_producto, cantidad, precio_unitario) VALUES
+(1,2,2,50),(1,1,1,100),(2,3,1,600),(3,4,1,200),(4,1,3,100),
+(5,2,2,50),(5,5,1,180),(6,3,1,600),(7,4,2,200),(8,2,4,50),
+(9,3,1,600),(9,1,1,100),(10,5,1,180),(11,1,2,100),(12,4,1,200),
+(13,3,1,600),(13,2,2,50),(14,1,1,100),(15,5,2,180),(16,2,3,50),
+(17,4,1,200),(18,3,2,600),(18,1,1,100),(19,5,1,180),(20,2,5,50),
+(21,1,2,100),(22,3,1,600),(23,4,2,200),(23,2,1,50),(24,5,2,180),
+(25,1,1,100),(25,2,2,50),(26,3,1,600),(27,4,1,200),(27,5,1,180),
+(28,2,3,50),(29,3,1,600),(29,1,1,100),(30,5,2,180),(30,2,2,50);
 
 DELIMITER $$
---
--- Procedimientos
---
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_actualizar_resumen_ventas` ()   BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-        RESIGNAL;
-    END;
+CREATE PROCEDURE sp_actualizar_resumen_ventas()
+BEGIN
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+  BEGIN
+    ROLLBACK;
+    RESIGNAL;
+  END;
 
-    START TRANSACTION;
+  START TRANSACTION;
+  DELETE FROM resumen_ventas_diarias;
 
-    DELETE FROM resumen_ventas_diarias;
+  INSERT INTO resumen_ventas_diarias
+    (fecha, cantidad_ventas, unidades_vendidas, ingresos, ticket_promedio, ultima_actualizacion)
+  SELECT
+    DATE(v.fecha_venta),
+    COUNT(DISTINCT v.id_venta),
+    SUM(d.cantidad),
+    SUM(d.cantidad * d.precio_unitario),
+    ROUND(SUM(d.cantidad * d.precio_unitario) / COUNT(DISTINCT v.id_venta), 2),
+    NOW()
+  FROM ventas AS v
+  INNER JOIN detalle_venta AS d ON d.id_venta = v.id_venta
+  WHERE v.estado = 'CONFIRMADA'
+  GROUP BY DATE(v.fecha_venta);
 
-    INSERT INTO resumen_ventas_diarias
-       (fecha, cantidad_ventas, unidades_vendidas,
-        ingresos, ticket_promedio, ultima_actualizacion)
-    SELECT
-        DATE(v.fecha_venta) AS fecha,
-        COUNT(DISTINCT v.id_venta) AS cantidad_ventas,
-        SUM(d.cantidad) AS unidades_vendidas,
-        SUM(d.cantidad * d.precio_unitario) AS ingresos,
-        ROUND(
-            SUM(d.cantidad * d.precio_unitario)
-              / COUNT(DISTINCT v.id_venta), 2
-        ) AS ticket_promedio,
-        NOW() AS ultima_actualizacion
-    FROM ventas AS v
-    INNER JOIN detalle_venta AS d
-        ON d.id_venta = v.id_venta
-    WHERE v.estado = 'CONFIRMADA'
-    GROUP BY DATE(v.fecha_venta);
-
-    COMMIT;
+  COMMIT;
 END$$
-
 DELIMITER ;
 
--- --------------------------------------------------------
+SET GLOBAL event_scheduler = ON;
+CREATE EVENT ev_actualizar_resumen_ventas
+ON SCHEDULE EVERY 5 MINUTE
+STARTS CURRENT_TIMESTAMP
+DO CALL sp_actualizar_resumen_ventas();
 
---
--- Estructura de tabla para la tabla `clientes`
---
+CALL sp_actualizar_resumen_ventas();
 
-CREATE TABLE `clientes` (
-  `id_cliente` int(11) NOT NULL,
-  `nombre` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `clientes`
---
-
-INSERT INTO `clientes` (`id_cliente`, `nombre`) VALUES
-(1, 'Ana'),
-(2, 'Luis'),
-(3, 'María');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `detalle_venta`
---
-
-CREATE TABLE `detalle_venta` (
-  `id_detalle` int(11) NOT NULL,
-  `id_venta` int(11) NOT NULL,
-  `id_producto` int(11) NOT NULL,
-  `cantidad` int(11) NOT NULL,
-  `precio_unitario` decimal(12,2) NOT NULL
-) ;
-
---
--- Volcado de datos para la tabla `detalle_venta`
---
-
-INSERT INTO `detalle_venta` (`id_detalle`, `id_venta`, `id_producto`, `cantidad`, `precio_unitario`) VALUES
-(1, 1, 2, 2, '50.00'),
-(2, 1, 1, 1, '100.00'),
-(3, 2, 3, 1, '600.00'),
-(4, 3, 4, 1, '200.00'),
-(5, 3, 2, 1, '50.00'),
-(6, 4, 3, 1, '600.00'),
-(7, 5, 1, 3, '100.00'),
-(8, 6, 2, 1, '50.00'),
-(9, 6, 4, 1, '200.00'),
-(10, 7, 3, 2, '600.00'),
-(11, 8, 3, 2, '600.00');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `productos`
---
-
-CREATE TABLE `productos` (
-  `id_producto` int(11) NOT NULL,
-  `nombre` varchar(100) NOT NULL,
-  `precio_catalogo` decimal(12,2) NOT NULL
-) ;
-
---
--- Volcado de datos para la tabla `productos`
---
-
-INSERT INTO `productos` (`id_producto`, `nombre`, `precio_catalogo`) VALUES
-(1, 'Teclado', '100.00'),
-(2, 'Mouse', '50.00'),
-(3, 'Monitor', '600.00'),
-(4, 'Audífonos', '200.00');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `resumen_ventas_diarias`
---
-
-CREATE TABLE `resumen_ventas_diarias` (
-  `fecha` date NOT NULL,
-  `cantidad_ventas` int(11) NOT NULL,
-  `unidades_vendidas` int(11) NOT NULL,
-  `ingresos` decimal(14,2) NOT NULL,
-  `ticket_promedio` decimal(14,2) NOT NULL,
-  `ultima_actualizacion` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `resumen_ventas_diarias`
---
-
-INSERT INTO `resumen_ventas_diarias` (`fecha`, `cantidad_ventas`, `unidades_vendidas`, `ingresos`, `ticket_promedio`, `ultima_actualizacion`) VALUES
-('2026-10-28', 2, 4, '800.00', '400.00', '2026-11-02 15:16:59'),
-('2026-10-29', 1, 2, '250.00', '250.00', '2026-11-02 15:16:59'),
-('2026-11-01', 1, 3, '300.00', '300.00', '2026-11-02 15:16:59'),
-('2026-11-02', 3, 6, '2650.00', '883.33', '2026-11-02 15:16:59');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `ventas`
---
-
-CREATE TABLE `ventas` (
-  `id_venta` int(11) NOT NULL,
-  `id_cliente` int(11) NOT NULL,
-  `fecha_venta` datetime NOT NULL,
-  `estado` enum('CONFIRMADA','ANULADA') NOT NULL DEFAULT 'CONFIRMADA',
-  `fecha_modificacion` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `ventas`
---
-
-INSERT INTO `ventas` (`id_venta`, `id_cliente`, `fecha_venta`, `estado`, `fecha_modificacion`) VALUES
-(1, 1, '2026-10-28 10:15:00', 'CONFIRMADA', '2026-11-02 09:03:40'),
-(2, 2, '2026-10-28 12:00:00', 'CONFIRMADA', '2026-11-02 09:03:40'),
-(3, 3, '2026-10-29 08:15:00', 'CONFIRMADA', '2026-11-02 09:03:40'),
-(4, 1, '2026-10-29 18:10:00', 'ANULADA', '2026-11-02 09:03:40'),
-(5, 2, '2026-11-01 09:00:00', 'CONFIRMADA', '2026-11-02 09:03:40'),
-(6, 3, '2026-11-02 07:20:00', 'CONFIRMADA', '2026-11-02 09:03:40'),
-(7, 1, '2026-11-02 08:00:00', 'CONFIRMADA', '2026-11-02 09:03:40'),
-(8, 2, '2026-11-02 15:11:20', 'CONFIRMADA', '2026-11-02 15:11:35');
-
---
--- Índices para tablas volcadas
---
-
---
--- Indices de la tabla `clientes`
---
-ALTER TABLE `clientes`
-  ADD PRIMARY KEY (`id_cliente`);
-
---
--- Indices de la tabla `detalle_venta`
---
-ALTER TABLE `detalle_venta`
-  ADD PRIMARY KEY (`id_detalle`),
-  ADD KEY `fk_detalle_producto` (`id_producto`),
-  ADD KEY `idx_detalle_venta` (`id_venta`);
-
---
--- Indices de la tabla `productos`
---
-ALTER TABLE `productos`
-  ADD PRIMARY KEY (`id_producto`);
-
---
--- Indices de la tabla `resumen_ventas_diarias`
---
-ALTER TABLE `resumen_ventas_diarias`
-  ADD PRIMARY KEY (`fecha`);
-
---
--- Indices de la tabla `ventas`
---
-ALTER TABLE `ventas`
-  ADD PRIMARY KEY (`id_venta`),
-  ADD KEY `fk_venta_cliente` (`id_cliente`),
-  ADD KEY `idx_ventas_estado_fecha` (`estado`,`fecha_venta`);
-
---
--- AUTO_INCREMENT de las tablas volcadas
---
-
---
--- AUTO_INCREMENT de la tabla `clientes`
---
-ALTER TABLE `clientes`
-  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT de la tabla `detalle_venta`
---
-ALTER TABLE `detalle_venta`
-  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `productos`
---
-ALTER TABLE `productos`
-  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `ventas`
---
-ALTER TABLE `ventas`
-  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
-
---
--- Restricciones para tablas volcadas
---
-
---
--- Filtros para la tabla `detalle_venta`
---
-ALTER TABLE `detalle_venta`
-  ADD CONSTRAINT `fk_detalle_producto` FOREIGN KEY (`id_producto`) REFERENCES `productos` (`id_producto`),
-  ADD CONSTRAINT `fk_detalle_venta` FOREIGN KEY (`id_venta`) REFERENCES `ventas` (`id_venta`);
-
---
--- Filtros para la tabla `ventas`
---
-ALTER TABLE `ventas`
-  ADD CONSTRAINT `fk_venta_cliente` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`);
-COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+-- Verificaciones
+SELECT COUNT(*) AS ventas_cargadas FROM ventas;
+SELECT estado, COUNT(*) AS cantidad FROM ventas GROUP BY estado;
+SELECT * FROM resumen_ventas_diarias ORDER BY fecha;
